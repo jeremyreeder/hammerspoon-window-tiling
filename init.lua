@@ -5,7 +5,7 @@ hs.alert.show('Hammerspoon')
 hs.hotkey.bind({'cmd', 'ctrl'}, 'r', hs.reload)
 
 -- fill screen by default
-hs.window.filter.defaultCurrentSpace:subscribe(hs.window.filter.windowCreated, function() hs.window.focusedWindow:setFullScreen() end)
+hs.window.filter.default:subscribe(hs.window.filter.windowCreated, function() hs.window.focusedWindow():setFullScreen() end)
 
 -- fill screen
 hs.hotkey.bind({'cmd','ctrl'}, 'space', function() hs.window.focusedWindow():toggleFullScreen() end)
@@ -52,6 +52,7 @@ hs.hotkey.bind({'cmd', 'ctrl', 'shift'}, 'k', function()
 	window:moveOneScreenNorth(False, True)
 	window:screen():setMain()
 	window:moveToUnit({0, 0, 1, 1})
+	window:raise()
 	window:setFullScreen()
 	window:focus()
 end)
@@ -64,6 +65,7 @@ hs.hotkey.bind({'cmd', 'ctrl', 'shift'}, 'j', function()
 	window:moveOneScreenSouth(False, True)
 	window:screen():setMain()
 	window:moveToUnit({0, 0, 1, 1})
+	window:raise()
 	window:setFullScreen()
 	window:focus()
 end)
@@ -88,14 +90,23 @@ end)
 
 -- focus the most recently focused of the current application's other windows
 hs.hotkey.bind({'option'}, 'tab', function()
-	local windows = hs.window.focusedWindow():application():allWindows()
-	windows[2]:focus()
+	local window1 = hs.window.focusedWindow()
+	local window2 = window1:application():allWindows()[2]
+	local wasFullScreen = window1:isFullScreen()
+	if wasFullScreen then window1:toggleFullScreen() end
+	window2:focus()
+	if wasFullScreen then window2.setFullScreen() end
 end)
 
 -- cycle focus through the current application's windows
 hs.hotkey.bind({'option', 'shift'}, 'tab', function()
-	local windows = hs.window.focusedWindow():application():allWindows()
-	windows[#windows]:focus()
+	local window1 = hs.window.focusedWindow()
+	local windows = window1:application():allWindows()
+	local windowX = windows[#windows]
+	local wasFullScreen = window1:isFullScreen()
+	if wasFullScreen then window1:toggleFullScreen() end
+	windowX:focus()
+	if wasFullScreen then windowX.setFullScreen() end
 end)
 
 -- launch a web browser
