@@ -89,3 +89,6 @@ hs.hotkey.bind({'option', 'shift'}, 'tab', function()
 	local windows = hs.window.focusedWindow():application():allWindows()
 	windows[#windows]:focus()
 end)
+
+-- launch a web browser
+hs.hotkey.bind({'cmd'}, '/', function() hs.execute('open https://duckduckgo.com') end)
