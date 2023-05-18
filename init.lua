@@ -4,8 +4,8 @@ hs.alert.show('Hammerspoon')
 -- reload
 hs.hotkey.bind({'cmd', 'ctrl'}, 'r', hs.reload)
 
--- fill screen by default (won't work without accessibility permissions)
---hs.window.filter.default:subscribe(hs.window.filter.windowFocused, function() hs.window.focusedWindow():moveToUnit({0, 0, 1, 1}) end)
+-- fill screen by default
+hs.window.filter.defaultCurrentSpace:subscribe(hs.window.filter.windowCreated, function() hs.window.focusedWindow:setFullScreen() end)
 
 -- fill screen
 hs.hotkey.bind({'cmd','ctrl'}, 'space', function() hs.window.focusedWindow():toggleFullScreen() end)
@@ -50,9 +50,9 @@ hs.hotkey.bind({'cmd', 'ctrl', 'shift'}, 'k', function()
 		window:toggleFullScreen()
 	end
 	window:moveOneScreenNorth(False, True)
+	window:screen():setMain()
 	window:moveToUnit({0, 0, 1, 1})
 	window:setFullScreen()
-	window:raise()
 	window:focus()
 end)
 hs.hotkey.bind({'cmd', 'ctrl', 'shift'}, 'j', function()
@@ -62,9 +62,9 @@ hs.hotkey.bind({'cmd', 'ctrl', 'shift'}, 'j', function()
 		window:toggleFullScreen()
 	end
 	window:moveOneScreenSouth(False, True)
+	window:screen():setMain()
 	window:moveToUnit({0, 0, 1, 1})
 	window:setFullScreen()
-	window:raise()
 	window:focus()
 end)
 
