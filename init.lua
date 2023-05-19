@@ -2,7 +2,15 @@
 hs.alert.show('Hammerspoon')
 
 -- fill screen by default
-hs.window.filter.default:subscribe(hs.window.filter.windowCreated, function() hs.window.focusedWindow():moveToUnit({0, 0, 1, 1}) end)
+hs.window.filter.default:subscribe(
+	hs.window.filter.windowCreated,
+	function()
+		local window = hs.window.focusedWindow()
+		if window:isStandard() then
+			window:moveToUnit({0, 0, 1, 1})
+		end
+	end
+)
 
 -- hotkey to reload
 hs.hotkey.bind({'cmd', 'ctrl'}, 'r', hs.reload)
@@ -81,12 +89,25 @@ hs.hotkey.bind({'option'}, 'l', function()
 end)
 
 -- hotkey to focus the app's prior window
-hs.hotkey.bind({'option'}, 'tab', function() hs.window.focusedWindow():application():allWindows()[2]:focus() end)
+hs.hotkey.bind({'option'}, 'tab', function()
+	local app = hs.window.focusedWindow():application()
+	local windows = app:allWindows()
+	if #windows >= 2 then
+		windows[2]:focus()
+	else
+		hs.alert.show(app:name() .. ' has no prior window.')
+	end
+end)
 
 -- hotkey to cycle thru the app's windows
 hs.hotkey.bind({'option', 'shift'}, 'tab', function()
-	local windows = hs.window.focusedWindow():application():allWindows()
-	windows[#windows]:focus()
+	local app = hs.window.focusedWindow():application()
+	local windows = app:allWindows()
+	if #windows >= 2 then
+		windows[#windows]:focus()
+	else
+		hs.alert.show(app:name() .. ' has no other windows.')
+	end
 end)
 
 -- hotkey to launch a web browser
