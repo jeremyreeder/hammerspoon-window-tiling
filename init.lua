@@ -9,6 +9,7 @@ hs.window.filter.default:subscribe(
 		if window:isStandard() then
 			window:moveToUnit({0, 0, 1, 1})
 		end
+		hs.alert.show(window:application():name(), window:screen(), 0.4)
 	end
 )
 
