@@ -112,12 +112,9 @@ hs.hotkey.bind({'option', 'shift'}, 'tab', function()
 	local app = hs.window.focusedWindow():application()
 	local windows = app:allWindows()
 	if #windows >= 2 then
-		windows[#windows]:focus()
-		if #windows > 2 then
-			hs.alert.show('')
-		else
-			hs.alert.show('Next of ' .. #windows .. ' ' .. app:name() .. ' windows.', 0.5)
-		end
+		local window = windows[#windows]
+		window:focus()
+		hs.alert.show('Next of ' .. #windows .. ' ' .. app:name() .. ' windows.', window:screen(), 0.5)
 	else
 		hs.alert.show(app:name() .. ' has no other windows.')
 	end
