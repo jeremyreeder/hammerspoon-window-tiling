@@ -1,5 +1,5 @@
 -- welcome
-hs.alert.show('Hammerspoon')
+hs.alert.show('Hammerspoon.')
 
 -- fill screen by default
 hs.window.filter.default:subscribe(
@@ -94,6 +94,12 @@ hs.hotkey.bind({'option'}, 'tab', function()
 	local windows = app:allWindows()
 	if #windows >= 2 then
 		windows[2]:focus()
+		hs.alert.show('Prior ' .. app:name() .. ' window.', 0.3)
+		if #windows >= 4 then
+			hs.alert.show('For 3rd ' .. app:name() .. ' window & beyond, use ⌥⇧⇥.', 0.7)
+		elseif #windows >= 3 then
+			hs.alert.show('For 3rd ' .. app:name() .. ' window, use ⌥⇧⇥.', 0.7)
+		end
 	else
 		hs.alert.show(app:name() .. ' has no prior window.')
 	end
@@ -105,13 +111,24 @@ hs.hotkey.bind({'option', 'shift'}, 'tab', function()
 	local windows = app:allWindows()
 	if #windows >= 2 then
 		windows[#windows]:focus()
+		if #windows > 2 then
+			hs.alert.show('')
+		else
+			hs.alert.show('Next of ' .. #windows .. ' ' .. app:name() .. ' windows.', 0.4)
+		end
 	else
 		hs.alert.show(app:name() .. ' has no other windows.')
 	end
 end)
 
 -- hotkey to launch a web browser
-hs.hotkey.bind({'cmd', 'ctrl'}, '/', function() hs.execute('open https://duckduckgo.com') end)
+hs.hotkey.bind({'cmd', 'ctrl'}, '/', function()
+	hs.execute('open https://duckduckgo.com')
+	hs.alert.show('Browser', 0.4)
+end)
 
 -- hotkey to launch Finder
-hs.hotkey.bind({'cmd', 'ctrl'}, 'Return', function() hs.execute('open --reveal ~/Documents') end)
+hs.hotkey.bind({'cmd', 'ctrl'}, 'Return', function()
+	hs.execute('open --reveal ~/Documents')
+	hs.alert.show('Finder', 0.4)
+end)
