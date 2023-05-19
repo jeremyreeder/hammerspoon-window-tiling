@@ -8,32 +8,50 @@ hs.hotkey.bind({'cmd', 'ctrl'}, 'r', hs.reload)
 hs.window.filter.default:subscribe(hs.window.filter.windowCreated, function() hs.window.focusedWindow():movetoUnit({0, 0, 1, 1}) end)
 
 -- fill screen
-hs.hotkey.bind({'cmd','ctrl'}, 'space', function() hs.window.focusedWindow():moveToUnit({0, 0, 1, 1}) end)
+hs.hotkey.bind({'cmd','ctrl'}, 'space', function()
+	local window = hs.window.focusedWindow()
+	window:setFullScreen(false)
+	window:moveToUnit({0, 0, 1, 1})
+end)
 
 -- fill left or right half of screen
-hs.hotkey.bind({'cmd', 'ctrl'}, 'h', function() hs.window.focusedWindow():moveToUnit({0, 0, 0.5, 1}) end)
-hs.hotkey.bind({'cmd', 'ctrl'}, 'l', function() hs.window.focusedWindow():moveToUnit({0.5, 0, 0.5, 1}) end)
+hs.hotkey.bind({'cmd', 'ctrl'}, 'h', function()
+	local window = hs.window.focusedWindow()
+	window:setFullScreen(false)
+	window:moveToUnit({0, 0, 0.5, 1})
+end)
+hs.hotkey.bind({'cmd', 'ctrl'}, 'l', function()
+	local window = hs.window.focusedWindow()
+	window:setFullScreen(false)
+	window:moveToUnit({0.5, 0, 0.5, 1})
+end)
 
 -- fill top or bottom half of screen
-hs.hotkey.bind({'cmd', 'ctrl'}, 'k', function() hs.window.focusedWindow():moveToUnit({0, 0, 1, 0.5}) end)
-hs.hotkey.bind({'cmd', 'ctrl'}, 'j', function() hs.window.focusedWindow():moveToUnit({0, 0.5, 1, 0.5}) end)
+hs.hotkey.bind({'cmd', 'ctrl'}, 'k', function()
+	local window = hs.window.focusedWindow()
+	window:setFullScreen(false)
+	window:moveToUnit({0, 0, 1, 0.5})
+end)
+hs.hotkey.bind({'cmd', 'ctrl'}, 'j', function()
+	local window = hs.window.focusedWindow()
+	window:setFullScreen(false)
+	window:moveToUnit({0, 0.5, 1, 0.5})
+end)
 
 -- move window to another screen
 hs.hotkey.bind({'cmd', 'ctrl', 'shift'}, 'k', function()
 	local window = hs.window.focusedWindow()
-	window:moveOneScreenNorth(False, True)
+	window:moveOneScreenNorth(false, true)
 	window:screen():setMain()
-	window:raise()
 	window:focus()
-	window:moveToUnit({0, 0, 1, 1})
+	window:moveToUnit({0, 0, 1, 1}) -- seems to have no effect
 end)
 hs.hotkey.bind({'cmd', 'ctrl', 'shift'}, 'j', function()
 	local window = hs.window.focusedWindow()
-	window:moveOneScreenSouth(False, True)
+	window:moveOneScreenSouth(false, true)
 	window:screen():setMain()
-	window:raise()
 	window:focus()
-	window:moveToUnit({0, 0, 1, 1})
+	window:moveToUnit({0, 0, 1, 1}) -- seems to have no effect
 end)
 
 -- navigate windows directionally
