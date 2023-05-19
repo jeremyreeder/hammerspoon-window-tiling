@@ -93,12 +93,14 @@ hs.hotkey.bind({'option'}, 'tab', function()
 	local app = hs.window.focusedWindow():application()
 	local windows = app:allWindows()
 	if #windows >= 2 then
-		windows[2]:focus()
-		hs.alert.show('Prior ' .. app:name() .. ' window.', 0.3)
+		local window = windows[2]
+		window:focus()
 		if #windows >= 4 then
-			hs.alert.show('For 3rd ' .. app:name() .. ' window & beyond, use ⌥⇧⇥.', 0.7)
+			hs.alert.show('Prior of ' .. #windows .. ' ' .. app:name() .. ' windows.\n\nFor 3rd & beyond, use ⌥⇧⇥.', window:screen(), 0.8)
 		elseif #windows >= 3 then
-			hs.alert.show('For 3rd ' .. app:name() .. ' window, use ⌥⇧⇥.', 0.7)
+			hs.alert.show('Prior of ' .. #windows .. ' ' .. app:name() .. ' windows.\n\nFor 3rd window, use ⌥⇧⇥.', window:screen(), 0.8)
+		else
+			hs.alert.show('Prior of ' .. #windows .. ' ' .. app:name() .. ' windows.', 0.5)
 		end
 	else
 		hs.alert.show(app:name() .. ' has no prior window.')
@@ -114,7 +116,7 @@ hs.hotkey.bind({'option', 'shift'}, 'tab', function()
 		if #windows > 2 then
 			hs.alert.show('')
 		else
-			hs.alert.show('Next of ' .. #windows .. ' ' .. app:name() .. ' windows.', 0.4)
+			hs.alert.show('Next of ' .. #windows .. ' ' .. app:name() .. ' windows.', 0.5)
 		end
 	else
 		hs.alert.show(app:name() .. ' has no other windows.')
