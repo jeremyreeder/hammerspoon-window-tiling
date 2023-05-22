@@ -6,3 +6,4 @@ For use as a "spoon" within HammerSpoon.
 1. Install HammerSpoon.
 2. Clone this repo to ~/.hammerspoon/Spoons/i3j.spoon.
 3. Add "hs.loadSpoon('i3j')" to ~/.hammerspoon/init.lua.
+4. Optional: Install MouseFollowsFocus spoon and add "hs.loadSpoon('MouseFollowsFocus'):start()" to ~/.hammerspoon/init.lua.
