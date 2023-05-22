@@ -169,7 +169,7 @@ hs.hotkey.bind({'option'}, 'tab', function()
 		obj:drawBorder(window)
 		window:focus()
 	else
-		hs.alert.show(app:name() .. ' has no prior window.')
+		hs.alert.show('No prior ' .. app:name() .. ' window')
 	end
 end)
 
@@ -182,7 +182,7 @@ hs.hotkey.bind({'option', 'shift'}, 'tab', function()
 		obj:drawBorder(window)
 		window:focus()
 	else
-		hs.alert.show(app:name() .. ' has no next window.')
+		hs.alert.show('No next ' .. app:name() .. ' window')
 	end
 end)
 
