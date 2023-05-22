@@ -1,6 +1,23 @@
 -- welcome
 hs.alert.show('Hammerspoon')
 
+-- track focus
+local lastBorder = nil
+local function drawBorder(window)
+	if lastBorder then
+		lastBorder:delete()
+	end
+	local border = hs.canvas.new(window:frame())
+	border:appendElements({
+		type = 'rectangle',
+		action = 'stroke',
+		strokeWidth = 6,
+		strokeColor = { red = 0.5, blue = 0, green = 0, alpha = 1 },
+	})
+	lastBorder = border
+	border:show()
+end
+
 -- fill screen by default
 hs.window.filter.default:subscribe(
 	hs.window.filter.windowCreated,
@@ -9,6 +26,7 @@ hs.window.filter.default:subscribe(
 		if window:isStandard() then
 			window:moveToUnit({0, 0, 1, 1})
 		end
+		drawBorder(window)
 	end
 )
 
@@ -17,6 +35,7 @@ hs.window.filter.default:subscribe(
 	hs.window.filter.windowFocused,
 	function()
 		local window = hs.window.focusedWindow()
+		drawBorder(window)
 		hs.alert.show(window:application():name(), window:screen(), 0.4)
 	end
 )
@@ -29,6 +48,7 @@ hs.hotkey.bind({'cmd','ctrl'}, 'space', function()
 	local window = hs.window.focusedWindow()
 	window:setFullScreen(false)
 	window:moveToUnit({0, 0, 1, 1})
+	drawBorder(window)
 	hs.alert.show('Fill SCREEN', 0.4)
 end)
 
@@ -37,24 +57,28 @@ hs.hotkey.bind({'cmd', 'ctrl'}, 'h', function()
 	local window = hs.window.focusedWindow()
 	window:setFullScreen(false)
 	window:moveToUnit({0, 0, 0.5, 1})
+	drawBorder(window)
 	hs.alert.show('Fill WEST', 0.3)
 end)
 hs.hotkey.bind({'cmd', 'ctrl'}, 'j', function()
 	local window = hs.window.focusedWindow()
 	window:setFullScreen(false)
 	window:moveToUnit({0, 0.5, 1, 0.5})
+	drawBorder(window)
 	hs.alert.show('Fill SOUTH', 0.3)
 end)
 hs.hotkey.bind({'cmd', 'ctrl'}, 'k', function()
 	local window = hs.window.focusedWindow()
 	window:setFullScreen(false)
 	window:moveToUnit({0, 0, 1, 0.5})
+	drawBorder(window)
 	hs.alert.show('Fill NORTH', 0.3)
 end)
 hs.hotkey.bind({'cmd', 'ctrl'}, 'l', function()
 	local window = hs.window.focusedWindow()
 	window:setFullScreen(false)
 	window:moveToUnit({0.5, 0, 0.5, 1})
+	drawBorder(window)
 	hs.alert.show('Fill EAST', 0.3)
 end)
 
@@ -63,6 +87,7 @@ hs.hotkey.bind({'cmd', 'ctrl', 'shift'}, 'h', function()
 	local window = hs.window.focusedWindow()
 	window:moveOneScreenWest(false, true)
 	window:screen():setMain()
+	drawBorder(window)
 	hs.alert.show('Move WEST', 0.3)
 	window:focus()
 end)
@@ -70,6 +95,7 @@ hs.hotkey.bind({'cmd', 'ctrl', 'shift'}, 'j', function()
 	local window = hs.window.focusedWindow()
 	window:moveOneScreenSouth(false, true)
 	window:screen():setMain()
+	drawBorder(window)
 	hs.alert.show('Move SOUTH', 0.3)
 	window:focus()
 end)
@@ -77,6 +103,7 @@ hs.hotkey.bind({'cmd', 'ctrl', 'shift'}, 'k', function()
 	local window = hs.window.focusedWindow()
 	window:moveOneScreenNorth(false, true)
 	window:screen():setMain()
+	drawBorder(window)
 	hs.alert.show('Move NORTH', 0.3)
 	window:focus()
 end)
@@ -84,6 +111,7 @@ hs.hotkey.bind({'cmd', 'ctrl', 'shift'}, 'l', function()
 	local window = hs.window.focusedWindow()
 	window:moveOneScreenEast(false, true)
 	window:screen():setMain()
+	drawBorder(window)
 	hs.alert.show('Move WEST', 0.3)
 	window:focus()
 end)
@@ -91,21 +119,25 @@ end)
 -- hotkeys to navigate windows directionally
 hs.hotkey.bind({'option'}, 'h', function()
 	local window = hs.window.focusedWindow()
+	drawBorder(window)
 	hs.alert.show('Focus WEST', 0.3)
 	window:focusWindowWest(window:application():allWindows())
 end)
 hs.hotkey.bind({'option'}, 'j', function()
 	local window = hs.window.focusedWindow()
+	drawBorder(window)
 	hs.alert.show('Focus SOUTH', 0.3)
 	window:focusWindowSouth(window:application():allWindows())
 end)
 hs.hotkey.bind({'option'}, 'k', function()
 	local window = hs.window.focusedWindow()
+	drawBorder(window)
 	hs.alert.show('Focus NORTH', 0.3)
 	window:focusWindowNorth(window:application():allWindows())
 end)
 hs.hotkey.bind({'option'}, 'l', function()
 	local window = hs.window.focusedWindow()
+	drawBorder(window)
 	hs.alert.show('Focus EAST', 0.3)
 	window:focusWindowEast(window:application():allWindows())
 end)
@@ -116,6 +148,7 @@ hs.hotkey.bind({'option'}, 'tab', function()
 	local windows = app:allWindows()
 	if #windows >= 2 then
 		local window = windows[2]
+		drawBorder(window)
 		window:focus()
 	else
 		hs.alert.show(app:name() .. ' has no prior window.')
@@ -128,6 +161,7 @@ hs.hotkey.bind({'option', 'shift'}, 'tab', function()
 	local windows = app:allWindows()
 	if #windows >= 2 then
 		local window = windows[#windows]
+		drawBorder(window)
 		window:focus()
 	else
 		hs.alert.show(app:name() .. ' has no next window.')
