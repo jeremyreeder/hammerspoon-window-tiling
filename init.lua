@@ -104,7 +104,6 @@ hs.hotkey.bind({'option'}, 'tab', function()
 	if #windows >= 2 then
 		local window = windows[2]
 		window:focus()
-		--hs.alert.show('Prior of ' .. #windows .. ' ' .. app:name() .. ' windows', 0.5)
 	else
 		hs.alert.show(app:name() .. ' has no prior window.')
 	end
@@ -117,9 +116,8 @@ hs.hotkey.bind({'option', 'shift'}, 'tab', function()
 	if #windows >= 2 then
 		local window = windows[#windows]
 		window:focus()
-		--hs.alert.show('Next of ' .. #windows .. ' ' .. app:name() .. ' windows', window:screen(), 0.5)
 	else
-		hs.alert.show(app:name() .. ' has no other windows.')
+		hs.alert.show(app:name() .. ' has no next window.')
 	end
 end)
 
