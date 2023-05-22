@@ -1,5 +1,5 @@
 -- welcome
-hs.alert.show('Hammerspoon.')
+hs.alert.show('Hammerspoon')
 
 -- fill screen by default
 hs.window.filter.default:subscribe(
@@ -9,6 +9,14 @@ hs.window.filter.default:subscribe(
 		if window:isStandard() then
 			window:moveToUnit({0, 0, 1, 1})
 		end
+	end
+)
+
+-- announce any change of focus
+hs.window.filter.default:subscribe(
+	hs.window.filter.windowFocused,
+	function()
+		local window = hs.window.focusedWindow()
 		hs.alert.show(window:application():name(), window:screen(), 0.4)
 	end
 )
@@ -96,13 +104,7 @@ hs.hotkey.bind({'option'}, 'tab', function()
 	if #windows >= 2 then
 		local window = windows[2]
 		window:focus()
-		if #windows >= 4 then
-			hs.alert.show('Prior of ' .. #windows .. ' ' .. app:name() .. ' windows.\n\nFor 3rd & beyond, use ⌥⇧⇥.', window:screen(), 0.8)
-		elseif #windows >= 3 then
-			hs.alert.show('Prior of ' .. #windows .. ' ' .. app:name() .. ' windows.\n\nFor 3rd window, use ⌥⇧⇥.', window:screen(), 0.8)
-		else
-			hs.alert.show('Prior of ' .. #windows .. ' ' .. app:name() .. ' windows.', 0.5)
-		end
+		--hs.alert.show('Prior of ' .. #windows .. ' ' .. app:name() .. ' windows', 0.5)
 	else
 		hs.alert.show(app:name() .. ' has no prior window.')
 	end
@@ -115,7 +117,7 @@ hs.hotkey.bind({'option', 'shift'}, 'tab', function()
 	if #windows >= 2 then
 		local window = windows[#windows]
 		window:focus()
-		hs.alert.show('Next of ' .. #windows .. ' ' .. app:name() .. ' windows.', window:screen(), 0.5)
+		--hs.alert.show('Next of ' .. #windows .. ' ' .. app:name() .. ' windows', window:screen(), 0.5)
 	else
 		hs.alert.show(app:name() .. ' has no other windows.')
 	end
@@ -124,11 +126,9 @@ end)
 -- hotkey to launch a web browser
 hs.hotkey.bind({'cmd', 'ctrl'}, '/', function()
 	hs.execute('open https://duckduckgo.com')
-	hs.alert.show('Browser', 0.4)
 end)
 
 -- hotkey to launch Finder
 hs.hotkey.bind({'cmd', 'ctrl'}, 'Return', function()
 	hs.execute('open --reveal ~/Documents')
-	hs.alert.show('Finder', 0.4)
 end)
