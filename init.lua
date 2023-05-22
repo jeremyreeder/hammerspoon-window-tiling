@@ -34,7 +34,7 @@ function obj:drawBorder(window)
 		border:show()
 	end
 end
-hs.window.filter.default:subscribe(
+hs.window.filter.defaultCurrentSpace:subscribe(
 	{hs.window.filter.windowFocused, hs.window.filter.windowMoved, hs.window.filter.windowResized},
 	function()
 		local window = hs.window.focusedWindow()
@@ -42,15 +42,16 @@ hs.window.filter.default:subscribe(
 		hs.alert.show(window:application():name(), window:screen(), 0.4)
 	end
 )
-hs.window.filter.default:subscribe(
+hs.window.filter.defaultCurrentSpace:subscribe(
 	hs.window.filter.windowDestroyed,
 	function()
-		obj:drawBorder(hs.window.focusedWindow())
+		local window = hs.window.focusedWindow()
+		if window then obj:drawBorder(hs.window.focusedWindow()) end
 	end
 )
 
 -- fill screen by default
-hs.window.filter.default:subscribe(
+hs.window.filter.defaultCurrentSpace:subscribe(
 	hs.window.filter.windowCreated,
 	function()
 		local window = hs.window.focusedWindow()
