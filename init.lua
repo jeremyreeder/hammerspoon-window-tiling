@@ -32,7 +32,7 @@ function obj:drawBorder(window)
 	border:show()
 end
 hs.window.filter.default:subscribe(
-	hs.window.filter.windowFocused,
+	{hs.window.filter.windowFocused, hs.window.filter.windowMoved, hs.window.filter.windowResized},
 	function()
 		local window = hs.window.focusedWindow()
 		obj:drawBorder(window)
