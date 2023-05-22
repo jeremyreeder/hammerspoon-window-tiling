@@ -12,7 +12,9 @@ local function drawBorder(window)
 		type = 'rectangle',
 		action = 'stroke',
 		strokeWidth = 6,
-		strokeColor = { red = 0.7, blue = 0, green = 0, alpha = 1 },
+		strokeColor = {red = 0.7, blue = 0, green = 0, alpha = 1},
+		withShadow = true,
+		shadow = {blurRadius = 9, color = {alpha = 1 / 3}, offset = {h = 0, w = 0}}
 	})
 	lastBorder = border
 	border:show()
