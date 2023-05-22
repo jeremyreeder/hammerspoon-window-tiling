@@ -12,11 +12,25 @@ local function drawBorder(window)
 		type = 'rectangle',
 		action = 'stroke',
 		strokeWidth = 6,
-		strokeColor = { red = 0.5, blue = 0, green = 0, alpha = 1 },
+		strokeColor = { red = 0.7, blue = 0, green = 0, alpha = 1 },
 	})
 	lastBorder = border
 	border:show()
 end
+hs.window.filter.default:subscribe(
+	hs.window.filter.windowFocused,
+	function()
+		local window = hs.window.focusedWindow()
+		drawBorder(window)
+		hs.alert.show(window:application():name(), window:screen(), 0.4)
+	end
+)
+hs.window.filter.default:subscribe(
+	hs.window.filter.windowDestroyed,
+	function()
+		drawBorder(hs.window.focusedWindow())
+	end
+)
 
 -- fill screen by default
 hs.window.filter.default:subscribe(
@@ -27,16 +41,6 @@ hs.window.filter.default:subscribe(
 			window:moveToUnit({0, 0, 1, 1})
 		end
 		drawBorder(window)
-	end
-)
-
--- announce any change of focus
-hs.window.filter.default:subscribe(
-	hs.window.filter.windowFocused,
-	function()
-		local window = hs.window.focusedWindow()
-		drawBorder(window)
-		hs.alert.show(window:application():name(), window:screen(), 0.4)
 	end
 )
 
