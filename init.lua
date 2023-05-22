@@ -19,17 +19,20 @@ function obj:drawBorder(window)
 		obj.lastBorder:delete()
 		obj.lastBorder = nil
 	end
-	local border = hs.canvas.new(window:frame())
-	border:appendElements({
-		type = 'rectangle',
-		action = 'stroke',
-		strokeWidth = 6,
-		strokeColor = {red = 0.7, blue = 0, green = 0, alpha = 1},
-		withShadow = true,
-		shadow = {blurRadius = 9, color = {alpha = 1 / 3}, offset = {h = 0, w = 0}}
-	})
-	obj.lastBorder = border
-	border:show()
+	local screens = hs.screen.allScreens()
+	if #screens > 1 or window:isFullScreen() == false then
+		local border = hs.canvas.new(window:frame())
+		border:appendElements({
+			type = 'rectangle',
+			action = 'stroke',
+			strokeWidth = 6,
+			strokeColor = {red = 0.7, blue = 0, green = 0, alpha = 1},
+			withShadow = true,
+			shadow = {blurRadius = 9, color = {alpha = 1 / 3}, offset = {h = 0, w = 0}}
+		})
+		obj.lastBorder = border
+		border:show()
+	end
 end
 hs.window.filter.default:subscribe(
 	{hs.window.filter.windowFocused, hs.window.filter.windowMoved, hs.window.filter.windowResized},
