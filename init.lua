@@ -34,12 +34,19 @@ function obj:drawBorder(window)
 		border:show()
 	end
 end
+obj.lastWindow = nil
+function obj:showApplicationName(window)
+	if window ~= obj.lastWindow then
+		hs.alert.show(window:application():name(), window:screen(), 0.4)
+		obj.lastWindow = window
+	end
+end
 hs.window.filter.default:subscribe(
 	{hs.window.filter.windowFocused, hs.window.filter.windowMoved, hs.window.filter.windowResized},
 	function()
 		local window = hs.window.focusedWindow()
 		obj:drawBorder(window)
-		hs.alert.show(window:application():name(), window:screen(), 0.4)
+		obj:showApplicationName(window)
 	end
 )
 hs.window.filter.default:subscribe(
