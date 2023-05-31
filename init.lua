@@ -3,7 +3,7 @@ i3j.__index = i3j
 
 -- metadata
 i3j.name = 'i3j'
-i3j.version = '0.1'
+i3j.version = '0.2'
 i3j.author = 'Jeremy Reeder <jeremy.reeder@pm.me>'
 i3j.homepage = 'https://github.com/jeremyreeder/i3j'
 i3j.license = 'BSD - https://opensource.org/licenses/BSD'
@@ -44,28 +44,38 @@ function i3j:showApplicationName(window)
 		i3j.lastWindow = window
 	end
 end
+function i3j:moveMouseNear(window)
+	local mouseLocation = hs.geometry(hs.mouse.absolutePosition())
+	local maxDistance = 100
+	local mouseVicinity = hs.geometry.rect(
+		mouseLocation.x - maxDistance,
+		mouseLocation.y - maxDistance,
+		2 * maxDistance,
+		2 * maxDistance
+	)
+	local frame = window:frame()
+	if mouseVicinity:intersect(frame).area == 0 then
+		hs.mouse.setAbsolutePosition(frame.center)
+	end
+end
 hs.window.filter.default:subscribe(
 	{hs.window.filter.windowFocused, hs.window.filter.windowMoved, hs.window.filter.windowResized},
-	function()
-		local window = hs.window.focusedWindow()
+	function(window)
 		i3j:drawBorder(window)
+		i3j:moveMouseNear(window)
 		i3j:showApplicationName(window)
 	end
 )
 hs.window.filter.default:subscribe(hs.window.filter.windowDestroyed, function() i3j:deleteBorder() end)
 
 -- fill screen by default & on demand
-function i3j:fillScreen()
-	local window = hs.window.focusedWindow()
-	if window:isStandard() then
-			window:moveToUnit({0, 0, 1, 1})
-			-- full-screen mode disabled to avoid the bug of making windows invisible when moving them
-			--if window:screen() ~= hs.screen.primaryScreen() then
-				--window:setFullScreen(true)
-			--end
-	end
+function i3j:fillScreen(window)
+	if window:isStandard() then window:moveToUnit({0, 0, 1, 1}) end
 end
-hs.window.filter.default:subscribe({hs.window.filter.windowCreated, hs.window.filter.windowOnScreen}, function() i3j:fillScreen() end)
+hs.window.filter.default:subscribe(
+	{hs.window.filter.windowCreated, hs.window.filter.windowOnScreen},
+	function(window) i3j:fillScreen(window) end
+)
 
 -- hotkey to reload
 hs.hotkey.bind({'cmd', 'ctrl'}, 'r', hs.reload)
@@ -74,7 +84,7 @@ hs.hotkey.bind({'cmd', 'ctrl'}, 'r', hs.reload)
 hs.hotkey.bind({'cmd','ctrl'}, 'space', function()
 	local window = hs.window.focusedWindow()
 	window:setFullScreen(false)
-	window:moveToUnit({0, 0, 1, 1})
+	fillScreen(window)
 	hs.alert.show('Fill SCREEN', 0.4)
 end)
 
