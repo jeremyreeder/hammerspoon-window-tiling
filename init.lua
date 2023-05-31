@@ -1,24 +1,27 @@
-local obj={}
-obj.__index = obj
+local i3j={}
+i3j.__index = i3j
 
 -- metadata
-obj.name = 'i3j'
-obj.version = '0.1'
-obj.author = 'Jeremy Reeder <jeremy.reeder@pm.me>'
-obj.homepage = 'https://github.com/jeremyreeder/i3j'
-obj.license = 'BSD - https://opensource.org/licenses/BSD'
+i3j.name = 'i3j'
+i3j.version = '0.1'
+i3j.author = 'Jeremy Reeder <jeremy.reeder@pm.me>'
+i3j.homepage = 'https://github.com/jeremyreeder/i3j'
+i3j.license = 'BSD - https://opensource.org/licenses/BSD'
 
 -- welcome
 hs.alert.show('Hammerspoon')
 
 -- track focus
 hs.window.highlight.start()
-obj.lastBorder = nil
-function obj:drawBorder(window)
-	if obj.lastBorder then
-		obj.lastBorder:delete()
-		obj.lastBorder = nil
+i3j.lastBorder = nil
+function i3j:deleteBorder()
+	if i3j.lastBorder then
+		i3j.lastBorder:delete()
+		i3j.lastBorder = nil
 	end
+end
+function i3j:drawBorder(window)
+	i3j:deleteBorder()
 	local screens = hs.screen.allScreens()
 	if #screens > 1 or window:isFullScreen() == false then
 		local border = hs.canvas.new(window:frame())
@@ -30,44 +33,39 @@ function obj:drawBorder(window)
 			withShadow = true,
 			shadow = {blurRadius = 9, color = {alpha = 1 / 3}, offset = {h = 0, w = 0}}
 		})
-		obj.lastBorder = border
+		i3j.lastBorder = border
 		border:show()
 	end
 end
-obj.lastWindow = nil
-function obj:showApplicationName(window)
-	if window ~= obj.lastWindow then
+i3j.lastWindow = nil
+function i3j:showApplicationName(window)
+	if window ~= i3j.lastWindow then
 		hs.alert.show(window:application():name(), window:screen(), 0.4)
-		obj.lastWindow = window
+		i3j.lastWindow = window
 	end
 end
 hs.window.filter.default:subscribe(
 	{hs.window.filter.windowFocused, hs.window.filter.windowMoved, hs.window.filter.windowResized},
 	function()
 		local window = hs.window.focusedWindow()
-		obj:drawBorder(window)
-		obj:showApplicationName(window)
+		i3j:drawBorder(window)
+		i3j:showApplicationName(window)
 	end
 )
-hs.window.filter.default:subscribe(
-	hs.window.filter.windowDestroyed,
-	function()
-		local window = hs.window.focusedWindow()
-		if window then obj:drawBorder(hs.window.focusedWindow()) end
-	end
-)
+hs.window.filter.default:subscribe(hs.window.filter.windowDestroyed, function() i3j:deleteBorder() end)
 
--- fill screen by default
-hs.window.filter.default:subscribe(
-	{hs.window.filter.windowCreated, hs.window.filter.windowOnScreen},
-	function()
-		local window = hs.window.focusedWindow()
-		if window:isStandard() then
+-- fill screen by default & on demand
+function i3j:fillScreen()
+	local window = hs.window.focusedWindow()
+	if window:isStandard() then
 			window:moveToUnit({0, 0, 1, 1})
-		end
-		obj:drawBorder(window)
+			-- full-screen mode disabled to avoid the bug of making windows invisible when moving them
+			--if window:screen() ~= hs.screen.primaryScreen() then
+				--window:setFullScreen(true)
+			--end
 	end
-)
+end
+hs.window.filter.default:subscribe({hs.window.filter.windowCreated, hs.window.filter.windowOnScreen}, function() i3j:fillScreen() end)
 
 -- hotkey to reload
 hs.hotkey.bind({'cmd', 'ctrl'}, 'r', hs.reload)
@@ -111,7 +109,6 @@ hs.hotkey.bind({'cmd', 'ctrl', 'shift'}, 'h', function()
 	local window = hs.window.focusedWindow()
 	window:setFullScreen(false)
 	window:moveOneScreenWest(false, true)
-	window:screen():setMain()
 	hs.alert.show('Move WEST', 0.3)
 	window:focus()
 end)
@@ -119,7 +116,6 @@ hs.hotkey.bind({'cmd', 'ctrl', 'shift'}, 'j', function()
 	local window = hs.window.focusedWindow()
 	window:setFullScreen(false)
 	window:moveOneScreenSouth(false, true)
-	window:screen():setMain()
 	hs.alert.show('Move SOUTH', 0.3)
 	window:focus()
 end)
@@ -127,7 +123,6 @@ hs.hotkey.bind({'cmd', 'ctrl', 'shift'}, 'k', function()
 	local window = hs.window.focusedWindow()
 	window:setFullScreen(false)
 	window:moveOneScreenNorth(false, true)
-	window:screen():setMain()
 	hs.alert.show('Move NORTH', 0.3)
 	window:focus()
 end)
@@ -135,8 +130,7 @@ hs.hotkey.bind({'cmd', 'ctrl', 'shift'}, 'l', function()
 	local window = hs.window.focusedWindow()
 	window:setFullScreen(false)
 	window:moveOneScreenEast(false, true)
-	window:screen():setMain()
-	hs.alert.show('Move WEST', 0.3)
+	hs.alert.show('Move EAST', 0.3)
 	window:focus()
 end)
 
@@ -194,4 +188,4 @@ hs.hotkey.bind({'cmd', 'ctrl'}, 'Return', function()
 	hs.execute('open --reveal ~/Documents')
 end)
 
-return obj
+return i3j
