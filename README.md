@@ -5,4 +5,4 @@ For use as a "spoon" within HammerSpoon.
 ## Installation
 1. Install HammerSpoon.
 2. Clone this repo to ~/.hammerspoon/Spoons/i3j.spoon.
-3. Add "hs.loadSpoon('i3j')" to ~/.hammerspoon/init.lua.
+3. Add "hs.loadSpoon('i3j'):start()" to ~/.hammerspoon/init.lua.

@@ -12,7 +12,6 @@ i3j.license = 'BSD - https://opensource.org/licenses/BSD'
 hs.alert.show('Hammerspoon')
 
 -- track focus
-hs.window.highlight.start()
 i3j.lastBorder = nil
 function i3j:deleteBorder()
 	if i3j.lastBorder then
@@ -58,17 +57,23 @@ function i3j:moveMouseNear(window)
 		hs.mouse.setAbsolutePosition(frame.center)
 	end
 end
-hs.window.filter.default:subscribe(
-	{hs.window.filter.windowFocused, hs.window.filter.windowMoved, hs.window.filter.windowResized},
-	function(window)
-		i3j:drawBorder(window)
-		i3j:moveMouseNear(window)
-		i3j:showApplicationName(window)
-	end
-)
-hs.window.filter.default:subscribe(hs.window.filter.windowDestroyed, function() i3j:deleteBorder() end)
+function i3j:start()
+	hs.window.filter.default:subscribe(
+		{hs.window.filter.windowFocused, hs.window.filter.windowMoved, hs.window.filter.windowResized},
+		function(window)
+			i3j:drawBorder(window)
+			i3j:moveMouseNear(window)
+			i3j:showApplicationName(window)
+		end
+	)
+	hs.window.filter.default:subscribe(hs.window.filter.windowDestroyed, function() i3j:deleteBorder() end)
+end
+function i3j:stop()
+	hs.window.filter.default:unsubscribeAll()
+	i3j:deleteBorder()
+end
 
--- fill screen by default & on demand
+-- fill screen by default
 function i3j:fillScreen(window)
 	if window:isStandard() then window:moveToUnit({0, 0, 1, 1}) end
 end
