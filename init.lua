@@ -193,6 +193,17 @@ hs.hotkey.bind({'option', 'shift'}, 'tab', function()
 	end
 end)
 
+-- hotkey for menu-based selection of a window of the current app (experimental)
+--hs.hotkey.bind({'option'}, 'tab', function()
+--	local app = hs.window.focusedWindow():application()
+--	local windows = app:allWindows()
+--	if #windows >= 2 then
+--		hs.expose.new(nil, {onlyActiveApplication=true, maxHintLetters = 0}):show()
+--	else
+--		hs.alert.show('No next ' .. app:name() .. ' window')
+--	end
+--end)
+
 -- hotkey to launch a web browser
 hs.hotkey.bind({'cmd', 'ctrl'}, '/', function()
 	hs.execute('open https://duckduckgo.com')
