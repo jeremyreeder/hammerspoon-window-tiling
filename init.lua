@@ -3,7 +3,7 @@ i3j.__index = i3j
 
 -- metadata
 i3j.name = 'i3j'
-i3j.version = '0.2'
+i3j.version = '0.3'
 i3j.author = 'Jeremy Reeder <jeremy.reeder@pm.me>'
 i3j.homepage = 'https://github.com/jeremyreeder/i3j'
 i3j.license = 'BSD - https://opensource.org/licenses/BSD'
@@ -12,30 +12,6 @@ i3j.license = 'BSD - https://opensource.org/licenses/BSD'
 hs.alert.show('Hammerspoon')
 
 -- track focus
-i3j.lastBorder = nil
-function i3j:deleteBorder()
-	if i3j.lastBorder then
-		i3j.lastBorder:delete()
-		i3j.lastBorder = nil
-	end
-end
-function i3j:drawBorder(window)
-	i3j:deleteBorder()
-	local screens = hs.screen.allScreens()
-	if #screens > 1 or window:isFullScreen() == false then
-		local border = hs.canvas.new(window:frame())
-		border:appendElements({
-			type = 'rectangle',
-			action = 'stroke',
-			strokeWidth = 6,
-			strokeColor = {red = 0.7, blue = 0, green = 0, alpha = 1},
-			withShadow = true,
-			shadow = {blurRadius = 9, color = {alpha = 1 / 3}, offset = {h = 0, w = 0}}
-		})
-		i3j.lastBorder = border
-		border:show()
-	end
-end
 i3j.lastWindow = nil
 function i3j:showApplicationName(window)
 	if window ~= i3j.lastWindow then
@@ -61,16 +37,21 @@ function i3j:start()
 	hs.window.filter.default:subscribe(
 		{hs.window.filter.windowFocused, hs.window.filter.windowMoved, hs.window.filter.windowResized},
 		function(window)
-			i3j:drawBorder(window)
-			i3j:moveMouseNear(window)
+			if window:application():name() ~= 'zoom.us' then
+				i3j:moveMouseNear(window)
+			end
 			i3j:showApplicationName(window)
+			hs.window.highlight.start()
 		end
 	)
-	hs.window.filter.default:subscribe(hs.window.filter.windowDestroyed, function() i3j:deleteBorder() end)
+	hs.window.highlight.ui.frameWidth = 6
+	hs.window.highlight.ui.frameColor = {0.7, 0, 0, 1}
+	hs.window.highlight.ui.overlay = true
+	hs.window.highlight.ui.overlayColor = {0, 0, 0, 0.15}
 end
 function i3j:stop()
 	hs.window.filter.default:unsubscribeAll()
-	i3j:deleteBorder()
+	hs.window.highlight.stop()
 end
 
 -- fill screen by default
