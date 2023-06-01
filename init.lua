@@ -152,10 +152,20 @@ hs.hotkey.bind({'option'}, 'l', function()
 	window:focusWindowEast(window:application():allWindows())
 end)
 
--- hotkey to cycle focus through all windows of the current app
+-- hotkeys to cycle focus through all windows of the current app
 hs.hotkey.bind({'option'}, 'tab', function()
 	local app = hs.window.focusedWindow():application()
 	filter = hs.window.filter.new(false):setAppFilter(app:name(), {focused=false}):setSortOrder(hs.window.filter.sortByFocused)
+	local windows = filter:getWindows()
+	if #windows >= 1 then
+		windows[1]:focus()
+	else
+		hs.alert.show('No other ' .. app:name() .. ' window')
+	end
+end)
+hs.hotkey.bind({'option', 'shift'}, 'tab', function()
+	local app = hs.window.focusedWindow():application()
+	filter = hs.window.filter.new(false):setAppFilter(app:name(), {focused=false}):setSortOrder(hs.window.filter.sortByFocusedLast)
 	local windows = filter:getWindows()
 	if #windows >= 1 then
 		windows[1]:focus()
