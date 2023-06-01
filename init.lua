@@ -54,7 +54,7 @@ function i3j:moveMouseNear(window)
 	)
 	local frame = window:frame()
 	if mouseVicinity:intersect(frame).area == 0 then
-		hs.mouse.setAbsolutePosition(frame.center)
+		hs.mouse.absolutePosition(frame.center)
 	end
 end
 function i3j:start()
@@ -171,38 +171,17 @@ hs.hotkey.bind({'option'}, 'l', function()
 	window:focusWindowEast(window:application():allWindows())
 end)
 
--- hotkey to focus the app's prior window
+-- hotkey to cycle focus through all windows of the current app
 hs.hotkey.bind({'option'}, 'tab', function()
 	local app = hs.window.focusedWindow():application()
-	local windows = app:allWindows()
-	if #windows >= 2 then
-		windows[2]:focus()
+	filter = hs.window.filter.new(false):setAppFilter(app:name(), {focused=false}):setSortOrder(hs.window.filter.sortByFocused)
+	local windows = filter:getWindows()
+	if #windows >= 1 then
+		windows[1]:focus()
 	else
-		hs.alert.show('No prior ' .. app:name() .. ' window')
+		hs.alert.show('No other ' .. app:name() .. ' window')
 	end
 end)
-
--- hotkey to cycle thru the app's windows
-hs.hotkey.bind({'option', 'shift'}, 'tab', function()
-	local app = hs.window.focusedWindow():application()
-	local windows = app:allWindows()
-	if #windows >= 2 then
-		windows[#windows]:focus()
-	else
-		hs.alert.show('No next ' .. app:name() .. ' window')
-	end
-end)
-
--- hotkey for menu-based selection of a window of the current app (experimental)
---hs.hotkey.bind({'option'}, 'tab', function()
---	local app = hs.window.focusedWindow():application()
---	local windows = app:allWindows()
---	if #windows >= 2 then
---		hs.expose.new(nil, {onlyActiveApplication=true, maxHintLetters = 0}):show()
---	else
---		hs.alert.show('No next ' .. app:name() .. ' window')
---	end
---end)
 
 -- hotkey to launch a web browser
 hs.hotkey.bind({'cmd', 'ctrl'}, '/', function()
