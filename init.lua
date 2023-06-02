@@ -67,10 +67,10 @@ hs.window.filter.default:subscribe(
 hs.hotkey.bind({'cmd', 'ctrl'}, 'r', hs.reload)
 
 -- hotkey to fill screen
-hs.hotkey.bind({'cmd','ctrl'}, 'space', function()
+hs.hotkey.bind({'cmd', 'ctrl'}, 'space', function()
 	local window = hs.window.focusedWindow()
 	window:setFullScreen(false)
-	fillScreen(window)
+	i3j:fillScreen(window)
 	hs.alert.show('Fill SCREEN', 0.4)
 end)
 
