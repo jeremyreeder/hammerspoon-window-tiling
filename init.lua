@@ -60,7 +60,7 @@ function i3j:fillScreen(window)
 	if window:isStandard() then window:moveToUnit({0, 0, 1, 1}) end
 end
 hs.window.filter.default:subscribe(
-	{hs.window.filter.windowCreated, hs.window.filter.windowOnScreen},
+	hs.window.filter.windowCreated,
 	function(window) i3j:fillScreen(window) end
 )
 
