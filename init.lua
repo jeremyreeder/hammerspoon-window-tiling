@@ -45,7 +45,7 @@ function i3j:start()
 		end
 	end)
 	hs.window.filter.default:subscribe(
-		{hs.window.filter.windowFocused, hs.window.filter.windowMoved, hs.window.filter.windowResized},
+		{hs.window.filter.windowFocused, hs.window.filter.windowMoved, hs.window.filter.windowResized, hs.window.filter.windowFullScreened},
 		hs.window.highlight.start -- restarting the highlight on these events fixes a bug where the highlight disappears
 	)
 	hs.window.highlight.start()
