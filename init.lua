@@ -34,17 +34,21 @@ function i3j:moveMouseNear(window)
 	end
 end
 function i3j:start()
+	hs.window.highlight.ui.frameWidth = 6
+	hs.window.highlight.ui.frameColor = {0.7, 0, 0, 1}
+	hs.window.highlight.ui.overlay = true
+	hs.window.highlight.ui.overlayColor = {0, 0, 0, 0.15}
 	hs.window.filter.default:subscribe(hs.window.filter.windowFocused, function(window)
 		if window == hs.window.focusedWindow() then
 			i3j:moveMouseNear(window)
 			i3j:showApplicationName(window)
 		end
-		hs.window.highlight.start()
 	end)
-	hs.window.highlight.ui.frameWidth = 6
-	hs.window.highlight.ui.frameColor = {0.7, 0, 0, 1}
-	hs.window.highlight.ui.overlay = true
-	hs.window.highlight.ui.overlayColor = {0, 0, 0, 0.15}
+	hs.window.filter.default:subscribe(
+		{hs.window.filter.windowFocused, hs.window.filter.windowMoved, hs.window.filter.windowResized},
+		hs.window.highlight.start -- restarting the highlight on these events fixes a bug where the highlight disappears
+	)
+	hs.window.highlight.start()
 end
 function i3j:stop()
 	hs.window.filter.default:unsubscribeAll()
@@ -78,9 +82,9 @@ i3j.southHalf = {0, 0.5, 1, 0.5}
 i3j.northHalf = {0, 0, 1, 0.5}
 function i3j:fillHalf(window, half, otherHalf)
 	window:setFullScreen(false)
+	window:moveToUnit(half)
 	local otherWindows = window:otherWindowsSameScreen()
 	if #otherWindows > 0 and otherWindows[1]:isStandard() then otherWindows[1]:moveToUnit(otherHalf) end
-	window:moveToUnit(half)
 	hs.alert.show('Fill HALF', 0.3)
 end
 hs.hotkey.bind({'cmd', 'ctrl'}, 'h', function()
