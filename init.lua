@@ -76,31 +76,24 @@ i3j.westHalf = {0, 0, 0.5, 1}
 i3j.eastHalf = {0.5, 0, 0.5, 1}
 i3j.southHalf = {0, 0.5, 1, 0.5}
 i3j.northHalf = {0, 0, 1, 0.5}
-hs.hotkey.bind({'cmd', 'ctrl'}, 'h', function()
-	local window = hs.window.focusedWindow()
+function i3j:fillHalf(window, half, otherHalf)
 	window:setFullScreen(false)
-	window:moveToUnit(i3j.westHalf)
-	hs.alert.show('Fill WEST', 0.3)
+	local otherWindows = window:otherWindowsSameScreen()
+	if #otherWindows > 0 and otherWindows[1]:isStandard() then otherWindows[1]:moveToUnit(otherHalf) end
+	window:moveToUnit(half)
+	hs.alert.show('Fill HALF', 0.3)
+end
+hs.hotkey.bind({'cmd', 'ctrl'}, 'h', function()
+	i3j:fillHalf(hs.window.focusedWindow(), i3j.westHalf, i3j.eastHalf)
 end)
 hs.hotkey.bind({'cmd', 'ctrl'}, 'j', function()
-	local window = hs.window.focusedWindow()
-	window:setFullScreen(false)
-	local others = hs.window.visibleWindows()
-	window:moveToUnit(i3j.southHalf)
-	hs.alert.show('Fill SOUTH', 0.3)
+	i3j:fillHalf(hs.window.focusedWindow(), i3j.southHalf, i3j.northHalf)
 end)
 hs.hotkey.bind({'cmd', 'ctrl'}, 'k', function()
-	local window = hs.window.focusedWindow()
-	window:setFullScreen(false)
-	local others = hs.window.visibleWindows()
-	window:moveToUnit(i3j.northHalf)
-	hs.alert.show('Fill NORTH', 0.3)
+	i3j:fillHalf(hs.window.focusedWindow(), i3j.northHalf, i3j.southHalf)
 end)
 hs.hotkey.bind({'cmd', 'ctrl'}, 'l', function()
-	local window = hs.window.focusedWindow()
-	window:setFullScreen(false)
-	window:moveToUnit(i3j.eastHalf)
-	hs.alert.show('Fill EAST', 0.3)
+	i3j:fillHalf(hs.window.focusedWindow(), i3j.eastHalf, i3j.westHalf)
 end)
 
 -- hotkeys to move window to another screen
