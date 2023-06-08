@@ -34,16 +34,13 @@ function i3j:moveMouseNear(window)
 	end
 end
 function i3j:start()
-	hs.window.filter.default:subscribe(
-		{hs.window.filter.windowFocused, hs.window.filter.windowMoved, hs.window.filter.windowResized},
-		function(window)
-			if window:application():name() ~= 'zoom.us' then
-				i3j:moveMouseNear(window)
-			end
+	hs.window.filter.default:subscribe(hs.window.filter.windowFocused, function(window)
+		if window == hs.window.focusedWindow() then
+			i3j:moveMouseNear(window)
 			i3j:showApplicationName(window)
-			hs.window.highlight.start()
 		end
-	)
+		hs.window.highlight.start()
+	end)
 	hs.window.highlight.ui.frameWidth = 6
 	hs.window.highlight.ui.frameColor = {0.7, 0, 0, 1}
 	hs.window.highlight.ui.overlay = true
@@ -75,28 +72,34 @@ hs.hotkey.bind({'cmd', 'ctrl'}, 'space', function()
 end)
 
 -- hotkeys to fill half of screen
+i3j.westHalf = {0, 0, 0.5, 1}
+i3j.eastHalf = {0.5, 0, 0.5, 1}
+i3j.southHalf = {0, 0.5, 1, 0.5}
+i3j.northHalf = {0, 0, 1, 0.5}
 hs.hotkey.bind({'cmd', 'ctrl'}, 'h', function()
 	local window = hs.window.focusedWindow()
 	window:setFullScreen(false)
-	window:moveToUnit({0, 0, 0.5, 1})
+	window:moveToUnit(i3j.westHalf)
 	hs.alert.show('Fill WEST', 0.3)
 end)
 hs.hotkey.bind({'cmd', 'ctrl'}, 'j', function()
 	local window = hs.window.focusedWindow()
 	window:setFullScreen(false)
-	window:moveToUnit({0, 0.5, 1, 0.5})
+	local others = hs.window.visibleWindows()
+	window:moveToUnit(i3j.southHalf)
 	hs.alert.show('Fill SOUTH', 0.3)
 end)
 hs.hotkey.bind({'cmd', 'ctrl'}, 'k', function()
 	local window = hs.window.focusedWindow()
 	window:setFullScreen(false)
-	window:moveToUnit({0, 0, 1, 0.5})
+	local others = hs.window.visibleWindows()
+	window:moveToUnit(i3j.northHalf)
 	hs.alert.show('Fill NORTH', 0.3)
 end)
 hs.hotkey.bind({'cmd', 'ctrl'}, 'l', function()
 	local window = hs.window.focusedWindow()
 	window:setFullScreen(false)
-	window:moveToUnit({0.5, 0, 0.5, 1})
+	window:moveToUnit(i3j.eastHalf)
 	hs.alert.show('Fill EAST', 0.3)
 end)
 
