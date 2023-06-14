@@ -45,8 +45,14 @@ function i3j:start()
 		end
 	end)
 	hs.window.filter.default:subscribe(
-		{hs.window.filter.windowFocused, hs.window.filter.windowMoved, hs.window.filter.windowResized, hs.window.filter.windowFullScreened},
-		hs.window.highlight.start -- restarting the highlight on these events fixes a bug where the highlight disappears
+		{
+			hs.window.filter.windowFocused,
+			hs.window.filter.windowMoved,
+			hs.window.filter.windowResized,
+			hs.window.filter.windowFullScreened,
+			hs.window.filter.windowUnFullScreened,
+		},
+		hs.window.highlight.start -- restarting the highlight on these events fixes a bug where the highlight sometimes disappears
 	)
 	hs.window.highlight.start()
 end
@@ -56,8 +62,9 @@ function i3j:stop()
 end
 
 -- fill screen by default
+i3j.wholeScreen = {0, 0, 1, 1}
 function i3j:fillScreen(window)
-	if window:isStandard() then window:moveToUnit({0, 0, 1, 1}) end
+	if window:isStandard() then window:moveToUnit(i3j.wholeScreen) end
 end
 hs.window.filter.default:subscribe(
 	hs.window.filter.windowCreated,
