@@ -52,10 +52,14 @@ function i3j:start()
 			hs.window.filter.windowFullScreened,
 			hs.window.filter.windowUnFullScreened,
 		},
-		hs.window.highlight.start -- restarting the highlight on these events fixes a bug where the highlight sometimes disappears
+		function()
+			-- restarting the highlight on these events fixes a bug where the highlight sometimes disappears
+			hs.window.highlight.start()
+		end
 	)
 	hs.window.highlight.start()
 end
+--hs.timer.doEvery(5, function() hs.window.highlight.start() end)
 function i3j:stop()
 	hs.window.filter.default:unsubscribeAll()
 	hs.window.highlight.stop()
