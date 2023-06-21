@@ -68,7 +68,7 @@ end
 -- fill screen by default
 i3j.wholeScreen = {0, 0, 1, 1}
 function i3j:fillScreen(window)
-	if window:isStandard() then window:moveToUnit(i3j.wholeScreen) end
+	if window:isStandard() and window:title() ~= '' then window:moveToUnit(i3j.wholeScreen) end
 end
 hs.window.filter.default:subscribe(
 	hs.window.filter.windowCreated,
@@ -77,6 +77,10 @@ hs.window.filter.default:subscribe(
 
 -- hotkey to reload
 hs.hotkey.bind({'cmd', 'ctrl'}, 'r', hs.reload)
+hs.hotkey.bind({'cmd', 'ctrl'}, 'w', function()
+	local window = hs.window.focusedWindow()
+	hs.alert.show(window:application():name() .. ' : ' .. window:title())
+end)
 
 -- hotkey to fill screen
 hs.hotkey.bind({'cmd', 'ctrl'}, 'space', function()
