@@ -68,7 +68,10 @@ end
 -- fill screen by default
 i3j.wholeScreen = {0, 0, 1, 1}
 function i3j:fillScreen(window)
-	if window:isStandard() and window:title() ~= '' then window:moveToUnit(i3j.wholeScreen) end
+	if window:isStandard()
+		and window:title() ~= ''
+		and window:title() ~= 'Copy'
+	then window:moveToUnit(i3j.wholeScreen) end
 end
 hs.window.filter.default:subscribe(
 	hs.window.filter.windowCreated,
