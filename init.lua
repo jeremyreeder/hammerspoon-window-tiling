@@ -49,17 +49,14 @@ function i3j:start()
 			hs.window.filter.windowFocused,
 			hs.window.filter.windowMoved,
 			hs.window.filter.windowResized,
-			hs.window.filter.windowFullScreened,
-			hs.window.filter.windowUnFullScreened,
+			hs.window.filter.windowUnFullscreened
 		},
 		function()
 			-- restarting the highlight on these events fixes a bug where the highlight sometimes disappears
 			hs.window.highlight.start()
 		end
 	)
-	hs.window.highlight.start()
 end
---hs.timer.doEvery(5, function() hs.window.highlight.start() end)
 function i3j:stop()
 	hs.window.filter.default:unsubscribeAll()
 	hs.window.highlight.stop()
@@ -204,6 +201,11 @@ end)
 -- hotkey to launch Finder
 hs.hotkey.bind({'cmd', 'ctrl'}, 'Return', function()
 	hs.execute('open --reveal ~/Documents')
+end)
+
+-- hotkey to remove highlight
+hs.hotkey.bind({'cmd', 'ctrl'}, '.', function()
+	hs.window.highlight.stop()
 end)
 
 return i3j
