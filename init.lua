@@ -47,13 +47,17 @@ function i3j:start()
 	hs.window.filter.default:subscribe(
 		{
 			hs.window.filter.windowFocused,
+			hs.window.filter.windowFullscreened,
 			hs.window.filter.windowMoved,
 			hs.window.filter.windowResized,
 			hs.window.filter.windowUnFullscreened
 		},
 		function()
-			-- restarting the highlight on these events fixes a bug where the highlight sometimes disappears
-			hs.window.highlight.start()
+			if hs.window.focusedWindow():isFullScreen() then
+				hs.window.highlight.stop()
+			else
+				hs.window.highlight.start()
+			end
 		end
 	)
 end
