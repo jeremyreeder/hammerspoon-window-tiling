@@ -13,6 +13,9 @@ hs.alert.show('Hammerspoon')
 
 -- track focus
 i3j.lastWindow = nil
+i3j.frameColor = {0.7, 0, 0, 1}
+i3j.invisibleFrameColor = {0.7, 0, 0, 0}
+i3j.scheduledBorderRemoval = nil
 function i3j:showApplicationName(window)
 	if window ~= i3j.lastWindow then
 		hs.alert.show(window:application():name(), window:screen(), 0.4)
@@ -35,9 +38,9 @@ function i3j:moveMouseNear(window)
 end
 function i3j:start()
 	hs.window.highlight.ui.frameWidth = 6
-	hs.window.highlight.ui.frameColor = {0.7, 0, 0, 1}
+	hs.window.highlight.ui.frameColor = i3j.frameColor
 	hs.window.highlight.ui.overlay = true
-	hs.window.highlight.ui.overlayColor = {0, 0, 0, 0.15}
+	hs.window.highlight.ui.overlayColor = {0, 0, 0, 0.32}
 	hs.window.filter.default:subscribe(hs.window.filter.windowFocused, function(window)
 		if window == hs.window.focusedWindow() then
 			i3j:moveMouseNear(window)
@@ -55,8 +58,16 @@ function i3j:start()
 		function()
 			if hs.window.focusedWindow():isFullScreen() then
 				hs.window.highlight.stop()
+				if i3j.scheduledBorderRemoval ~= nil then
+					i3j.scheduledBorderRemoval:stop()
+					i3j.scheduledBorderRemoval = nil
+				end
 			else
+				hs.window.highlight.ui.frameColor = i3j.frameColor
 				hs.window.highlight.start()
+				i3j.scheduledBorderRemoval = hs.timer.doAfter(3, function()
+					hs.window.highlight.ui.frameColor = i3j.invisibleFrameColor
+				end)
 			end
 		end
 	)
