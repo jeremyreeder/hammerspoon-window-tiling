@@ -40,7 +40,6 @@ function i3j:start()
 	hs.window.highlight.ui.frameWidth = 6
 	hs.window.highlight.ui.frameColor = i3j.frameColor
 	hs.window.highlight.ui.overlay = true
-	hs.window.highlight.ui.overlayColor = {0, 0, 0, 0.32}
 	hs.window.filter.default:subscribe(hs.window.filter.windowFocused, function(window)
 		if window == hs.window.focusedWindow() then
 			i3j:moveMouseNear(window)
@@ -64,9 +63,11 @@ function i3j:start()
 				end
 			else
 				hs.window.highlight.ui.frameColor = i3j.frameColor
+				hs.window.highlight.ui.overlayColor = {0, 0, 0, 0.32}
 				hs.window.highlight.start()
 				i3j.scheduledBorderRemoval = hs.timer.doAfter(3, function()
 					hs.window.highlight.ui.frameColor = i3j.invisibleFrameColor
+					hs.window.highlight.ui.overlayColor = {0, 0, 0, 0}
 				end)
 			end
 		end
