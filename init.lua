@@ -63,7 +63,7 @@ function i3j:start()
 				end
 			else
 				hs.window.highlight.ui.frameColor = i3j.frameColor
-				hs.window.highlight.ui.overlayColor = {0, 0, 0, 0.32}
+				hs.window.highlight.ui.overlayColor = {0, 0, 0, 0.15}
 				hs.window.highlight.start()
 				i3j.scheduledBorderRemoval = hs.timer.doAfter(3, function()
 					hs.window.highlight.ui.frameColor = i3j.invisibleFrameColor
